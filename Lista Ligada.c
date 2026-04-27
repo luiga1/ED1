@@ -22,7 +22,7 @@ cabecalho Cria_No_Inicio(cabecalho lista);
 
 cabecalho Cria_No_Final(cabecalho lista);
 
-cabecalho Deleta_No(cabecalho lista);
+cabecalho Deleta_No_Final(cabecalho lista);
 
 void Print_lista(cabecalho lista);
 
@@ -63,7 +63,7 @@ cabecalho Cria_Lista(cabecalho lista){
 
 cabecalho Cria_No_Inicio(cabecalho lista){
 
-    //cria um novo nó
+    //cria um novo no
     No *novoNo = malloc(sizeof(No));
 
     printf("Digite o elemento a ser criado ");
@@ -83,7 +83,7 @@ cabecalho Cria_No_Final(cabecalho lista){
 
     No *aux;
 
-    //cria um novo nó
+    //cria um novo no
     No *novoNo = malloc(sizeof(No));
 
     printf("Digite o elemento a ser criado no final ");
@@ -101,6 +101,23 @@ cabecalho Cria_No_Final(cabecalho lista){
     lista.tamanho++;
 
     return lista;
+}
+
+cabecalho Deleta_No_Final(cabecalho lista){
+    
+    No *aux = lista.primeiro;
+    //pegar o penutimo no e deletar o ultimo
+    while (aux->prox->prox != NULL)
+    {
+        aux = aux->prox;
+    }
+    
+    //troca de ponteiros
+
+    lista.ultimo = aux;
+    free(aux->prox);
+    aux->prox = NULL;
+
 }
 
 void Print_lista(cabecalho lista){

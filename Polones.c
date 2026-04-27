@@ -15,62 +15,59 @@ int precedencia(char obj){
 
 void infixaParaPosfixa(char* exp, char* pox){
     char pilha[100];
-    char aux;
+    char atual;
     int poxt = 0;
     int topo = -1;
 
     for(int i=0; exp[i] != '\0';i++){
+        atual = exp[i];
 
-        if(precedencia(exp[i]) == 0){
+        if(atual == ' ') // ignorar espaços
+            continue;
+
+        if(precedencia(atual) == 0){
             
-            if(exp[i] == '('){
-                pilha[topo++] = exp[i]; // empilhar e começa a dar preferencia aos operadoes dos parenteses
-            }
-
-            if(exp[i] == ')'){
-                aux = pilha[--topo];
-                while(aux != '('){// vai desempilhar os operadores dos parenteses
-                    pox[poxt++] = aux;
-                    aux = pilha[--topo];
+            if(atual == '('){
+                pilha[++topo] = atual; // vai empilhar o ( para saber a referencia
+            } 
+            else if(atual == ')'){
+                while(pilha[topo] != '('&& topo > -1){// vai desempilhar os operadores dos parenteses
+                    pox[poxt++] = pilha[topo--];
                 }
+                if(topo > -1)topo--; // remove o parenteses
             }
-
             else {
-                if(exp[i] == ' ') // ignorar espaços
-                pox[poxt++] = exp[i]; //copiar os operandos
+                pox[poxt++] = atual; //copiar os operandos
             }
         }
 
-        if(precedencia(exp[i] == 1)){
-            while(topo>0 && pilha[topo-1] != '('){
+        else{
+            while (topo >= 0 && pilha[topo] != '(' && precedencia(pilha[topo]) >= precedencia(atual)) { // se o operador for maior ou igual desempilha
                 pox[poxt++] = pilha[topo--];
             }
-            pilha[topo++] = exp[i];
-        }
-
-        if(precedencia(exp[i]) == 2){
-            while(topo>0 && pilha[topo-1] != '(' && precedencia(pilha[topo-1]) != 1){
-                pox[poxt++] = pilha[topo--];
-            }
-            pilha[topo++] = exp[i];
+            pilha[++topo] = atual;
         }
 
     }
-    while(topo>0){
-        pox[poxt++] = pilha[topo--];
+    while(topo>-1){
+        pox[poxt++] = pilha[topo--]; // desempilhar o final da pilha apos terminar todo a expressão
     }
     pox[poxt] = '\0';
+
 
 }
 
 int main(){
-
     char expressao[100];
-    char* resultado = malloc(sizeof(char) * 101);
-    printf("digite a expressão");
-    scanf("%s",expressao);
-    printf("Infixa: %s\n", expressao);
+    char resultado[100]; // Simplificado para array fixo
+
+    printf("Digite a expressao");
+    scanf("%s", expressao);
+
     infixaParaPosfixa(expressao, resultado);
-    printf("%s",resultado);
+
+    printf("Infixa: %s\n", expressao);
+    printf("Posfixa: %s\n", resultado);
+
     return 0;
 }
